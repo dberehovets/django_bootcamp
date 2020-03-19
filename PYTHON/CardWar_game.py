@@ -70,6 +70,8 @@ computer.name = "Computer"
 
 print("OK. The cards are dealt! Let's play!")
 while(half1 and half2):
+    print(half1)
+    print(half2)
     input("Please press Enter to draw a card\n")
 
     pl_card = half1.pop(0)
@@ -79,14 +81,33 @@ while(half1 and half2):
     print("Computer is holding card " + cm_card)
 
     if RANKS.index(pl_card[:-1]) > RANKS.index(cm_card[:-1]):
-        print("Your card is higher. You take 2 cards!")
-        half1 = half1 + [pl_card, cm_card]
-    elif RANKS.index(pl_card[0]) < RANKS.index(cm_card[0]):
-        print("Computer's card is higher. You lose 1 card.")
-        half2 = half2 + [cm_card, pl_card]
+        print("Your card is higher. You take all cards!")
+        half1 = half1 + [pl_card, cm_card] + player.hand + computer.hand
+        player.hand = computer.hand = []
+    elif RANKS.index(pl_card[:-1]) < RANKS.index(cm_card[:-1]):
+        print("Computer's card is higher. You lost cards.")
+        half2 = half2 + [cm_card, pl_card] + player.hand + computer.hand
+        player.hand = computer.hand = []
     else:
-        print("Oh no...")
-        break
+        if len(half1) >= 3:
+            player.hand = player.hand + [pl_card] + half1[:3]
+            half1 = half1[3:]
+            print("Each of you is holding " + str(len(player.hand)) + " cards")
+        else:
+            print("You lost all the cards")
+            break
 
+        if len(half2) >= 3:
+            computer.hand = computer.hand + [cm_card] + half2[:3]
+            half2 = half2[3:]
+        else:
+            print("Computer lost all the cards.")
+            break
+
+print("Game over")
+if half1:
+    print(player.name + ", you won!")
+else:
+    print("Computer won!")
 
 # Use the 3 classes along with some logic to play a game of war!
